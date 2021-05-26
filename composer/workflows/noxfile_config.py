@@ -14,11 +14,19 @@
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
-# You can copy this file into your directory, then it will be inported from
+# You can copy this file into your directory, then it will be imported from
 # the noxfile.py.
 
 # The source of truth:
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
+
+import tempfile
+
+
+# Airflow creates a config file at the installation, so we want to set
+# `AIRFLOW_HOME` envvar before running pytest.
+
+_tmpdir = tempfile.TemporaryDirectory()
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
@@ -35,5 +43,5 @@ TEST_CONFIG_OVERRIDE = {
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    "envs": {"AIRFLOW_HOME": _tmpdir.name},
 }
